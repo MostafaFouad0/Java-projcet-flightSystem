@@ -1,3 +1,8 @@
+
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -30,21 +35,30 @@ public class Passengers extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                OPENED(evt);
+            }
+        });
 
+        jTable1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "First Name", "Second Name", "Last Name", "SSN", "Ticket Code"
+                "SSN", "First Name", "Last Name", "Ticket Code"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("Back");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -66,11 +80,44 @@ public class Passengers extends javax.swing.JFrame {
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    
+    public void LOAD(){
+        String sql = "select Customer.SSN, Customer.First_Name,Customer.Last_Name,Ticket.Code from Customer join book on Customer.SSN = book.SSN join Ticket on Ticket.Code = book.TicketCode";
+            try{
+            Statement st = LoginForm.connection.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()){
+                String ssn = String.valueOf(rs.getString("SSN"));
+                String fn = String.valueOf(rs.getString("First_Name"));
+                String ln = String.valueOf(rs.getString("Last_Name"));
+                String code = String.valueOf(rs.getString("Code"));
+
+                String Data[] = {ssn,fn,ln,code};
+                DefaultTableModel tblModel  = (DefaultTableModel)jTable1.getModel();
+                
+                tblModel.addRow(Data);
+            }
+            }catch(Exception e){
+                System.out.println("Error happend!");
+            }
+    }
+    
+    
+    private void OPENED(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_OPENED
+        LOAD();
+    }//GEN-LAST:event_OPENED
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       homePage hp = new homePage();
+       hp.show(true);
+       dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
