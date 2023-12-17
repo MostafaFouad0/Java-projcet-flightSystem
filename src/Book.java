@@ -75,8 +75,24 @@ public class Book extends javax.swing.JFrame {
             new String [] {
                 "Flight_ID", "Origin", "Destination", "Date", "TicketCode", "Class", "Type", "Cost"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+            jTable1.getColumnModel().getColumn(7).setResizable(false);
+        }
 
         jButton1.setFont(new java.awt.Font("Sitka Text", 0, 18)); // NOI18N
         jButton1.setForeground(new java.awt.Color(39, 55, 77));
