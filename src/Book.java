@@ -321,14 +321,28 @@ public class Book extends javax.swing.JFrame {
        }
     
     public void LOAD(){
-        String sql = "select Flight.Flight_Number, Flight.Fly_From,Flight.Fly_TO,Flight.Date,Ticket.Code,Ticket.Class,Ticket.Type,Ticket.Cost from Flight join Have on Have.Flight_Number = Flight.Flight_Number join Ticket on Ticket.Code = Have.Code";
+        String sql = "SELECT\n" +
+"    Flight.Flight_Number,\n" +
+"    OriginAirport.Location AS origin,\n" +
+"    DestinationAirport.Location AS destination,\n" +
+"    Flight.Date,\n" +
+"    Ticket.Code,\n" +
+"    Ticket.Class,\n" +
+"    Ticket.Type,\n" +
+"    Ticket.Cost\n" +
+"FROM\n" +
+"    Flight\n" +
+"JOIN Airport AS OriginAirport ON Flight.Fly_From = OriginAirport.Code\n" +
+"JOIN Airport AS DestinationAirport ON Flight.Fly_TO = DestinationAirport.Code\n" +
+"JOIN Have ON Flight.Flight_Number = Have.Flight_Number\n" +
+"JOIN Ticket ON Have.Code = Ticket.Code;";
             try{
             Statement st = LoginForm.connection.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()){
                 String fn = String.valueOf(rs.getInt("Flight_Number"));
-                String FF = String.valueOf(rs.getInt("Fly_From"));
-                String FT = String.valueOf(rs.getInt("Fly_TO"));
+                String FF = String.valueOf(rs.getString("origin"));
+                String FT = String.valueOf(rs.getString("destination"));
                 String Date = rs.getString("Date");
                 String code = String.valueOf(rs.getInt("Code"));
                 String clas = rs.getString("Class");
